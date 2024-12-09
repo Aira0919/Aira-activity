@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Log In</title>
+    <style>
+        body { margin: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; }
+        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; }
+        p.message { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Sign Up / Log In</h2>
+        <input type="text" id="srnm" placeholder="Enter Username" required>
+        <input type="password" id="psswrd" placeholder="Enter Password" required>
+        <button onclick="signUp()">Sign Up</button>
+        <button onclick="logIn()">Log In</button>
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        function signUp() {
+            const user = document.getElementById("srnm").value;
+            const password = document.getElementById("psswrd").value;
+            const message = document.getElementById("message");
+
+            if (user && password) {
+                const data = JSON.parse(localStorage.getItem("data")) || [];
+
+                if (data.some(item => item.username === user)) {
+                    message.textContent = "Username already exists!";
+                    message.style.color = "red";
+                } else {
+                    data.push({ username: user, password: password });
+                    localStorage.setItem("data", JSON.stringify(data));
+                    message.textContent = "Sign up successful!";
+                    message.style.color = "green";
+                    document.getElementById("srnm").value = "";
+                    document.getElementById("psswrd").value = "";
+                }
+            } else {
+                message.textContent = "Both fields are required!";
+                message.style.color = "red";
+            }
+        }
+        function logIn() {
+            const user = document.getElementById("srnm").value;
+            const password = document.getElementById("psswrd").value;
+            const message = document.getElementById("message");
+
+            if (user && password) {
+                const data = JSON.parse(localStorage.getItem("data")) || [];
+
+                const userFound = data.find(item => item.username === user && item.password === password);
+
+                if (userFound) {
+                    message.textContent = `Welcome back, ${user}!`;
+                    message.style.color = "green";
+                } else {
+                    message.textContent = "Invalid username or password!";
+                    message.style.color = "red";
+                }
+            } else {
+                message.textContent = "Both fields are required!";
+                message.style.color = "red";
+            }
+        }
+    </script>
+</body>
+</html>
